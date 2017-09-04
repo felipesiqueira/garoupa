@@ -2,7 +2,7 @@
 
 APP Desenvolvido em Apache Cordova utilizando banco de dados SQLite e Sincronização de dados com mysql.
 
-<strong>Plugins utilizados</strong>
+<strong>Plugins utilizados:</strong>
 
 cordova-plugin-dialogs<br>
 cordova-plugin-network-information<br>
