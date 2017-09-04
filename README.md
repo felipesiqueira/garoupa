@@ -4,9 +4,9 @@ APP Desenvolvido em Apache Cordova utilizando banco de dados SQLite e Sincroniza
 
 Plugins utilizados
 
-cordova-plugin-dialogs
-cordova-plugin-network-information
-cordova-plugin-spinnerdialog
-cordova-plugin-splashscreen
-cordova-plugin-whitelist
-cordova-sqlite-storage
+cordova-plugin-dialogs<br>
+cordova-plugin-network-information<br>
+cordova-plugin-spinnerdialog<br>
+cordova-plugin-splashscreen<br>
+cordova-plugin-whitelist<br>
+cordova-sqlite-storage<br>
