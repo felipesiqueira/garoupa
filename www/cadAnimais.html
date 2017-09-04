@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="theme-color" content="#444444">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
+</head>
+<body>
+	<div class="bar bar-header bar-dark">
+		<a class="button button-clear" href="listAnimais.html">Voltar</a>
+		<h1 class="title">Cadastrar animais</h1>
+	</div>
+    <div class="container-fluid" style="margin-top:80px;">
+		<div class="row">
+			<div class="col-xs-12">
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Brinco</span>
+					<input type="text" id="brinco">
+				</label>
+				
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Matriz</span>
+					<select name="matriz" id="matriz">
+						<option value="S">Sim</option>
+						<option value="N">Não</option>
+					</select>
+				</label>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Raça</span>
+						<select name="raca" id="raca">
+							<option value="">Selecione</option>
+						</select>
+				</label>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Sexo</span>
+						<select name="sexo" id="sexo">
+							<option value="">Selecione</option>
+							<option value="M">Macho</option>
+							<option value="F">Fêmea</option>
+						</select>
+				</label>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Pai</span>
+					<select name="pai" id="pai">
+						<option value="">Selecione</option>
+					</select>
+				</label>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Mãe</span>
+					<select name="mae" id="mae">
+						<option value="">Selecione</option>
+					</select>
+				</label>
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Ativo</span>
+					<select name="situacao" id="situacao">
+						<option value="S">Sim</option>
+						<option value="N">Não</option>
+					</select>
+				</label>	
+
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Estado</span>
+					<select name="estado" id="estado">
+						<option value="">Selecione</option>
+					</select>
+				</label>	
+			</div>
+		</div>
+		<div class="row" style="margin-top:30px;">
+			<div class="col-xs-12"><center><button id="incluirAnimal" class="btn btn-success">SALVAR</button></center></div>
+		</div>
+    </div>
+	<link rel="stylesheet" type="text/css" href="css/ionic.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/animais.js"></script>
+</body>
+</html>

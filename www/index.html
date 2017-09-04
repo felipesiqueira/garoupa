@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de animais</title>
+	<meta name="theme-color" content="#444444">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
+    <link rel="stylesheet" type="text/css" href="css/ionic.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+    <div class="container-fluid" style="margin-top:80px;">
+		<div class="row">
+			<div class="col-md-12"><center><img src="img/logo.png" id="logo"></center></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="newButton" onclick="location.href='listAnimais.html'">
+					<img src="img/animal.png" class="img-responsive iconButton">
+					<div class="newButtonTxt">Cadastrar animais</div>
+				</div>			
+			</div>
+			<div class="col-xs-6">
+				<div class="newButton" onclick="location.href='listEventoIndividual.html'">
+					<img src="img/seringa.png" class="img-responsive iconButton">
+					<div class="newButtonTxt">Evento sanitário<br>Individual</div>
+				</div>			
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">	
+				<div class="newButton" onclick="location.href='listEventoLote.html'">
+					<img src="img/lote.png" class="img-responsive iconButton">
+					<div class="newButtonTxt">Evento sanitário<br>Por Lote</div>
+				</div>			
+			</div>
+			<div class="col-xs-6">	
+				<div class="newButton" onclick="location.href='configuracoes.html'">
+					<img src="img/config.png" class="img-responsive iconButton">
+					<div class="newButtonTxt">Configurações</div>
+				</div>			
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="newButtonHorizon" id="sincronizar">
+					<div class="newButtonHorizonImg"><img src="img/sinc.png" class="iconButtonHorizon"></div>
+					<div class="newButtonHorizonTxt">Sincronizar</div>
+				</div>		
+			</div>
+			<div class="col-xs-6">
+				<div class="newButtonHorizon" id="sair">
+					<div class="newButtonHorizonImg"><img src="img/logout.png" class="iconButtonHorizon"></div>
+					<div class="newButtonHorizonTxt">Sair</div>
+				</div>			
+			</div>
+		</div>		
+
+    </div>
+
+</body>
+</html>

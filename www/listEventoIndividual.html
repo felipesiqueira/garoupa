@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="theme-color" content="#444444">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
+	<link rel="stylesheet" type="text/css" href="css/ionic.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/eventos.js"></script>
+</head>
+<body>
+    <div class="bar bar-header bar-dark">
+        <a class="button button-clear" href="index.html">Voltar</a>
+        <h1 class="title">Listar eventos sanitários - Individual</h1>
+    </div>
+    <div class="container-fluid" style="margin-top:80px;">
+		
+		<div class="row">
+			<div class="col-xs-6"></div>
+			<div class="col-xs-6"><button onclick="location.href='cadEventoIndividual.html'" class="btn btn-success">CADASTRAR EVENTO</button></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<table class="table" id="lsEventos">
+					<thead>
+						<tr>
+							<th>Evento</th>
+							<th>Animal</th>
+							<th>Resultado</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+				<ul class="pager">
+				  <li><a href="" id="ant">Anterior</a></li>
+				  <li><a href="" id="prox">Próximo</a></li>
+				</ul>	
+			</div>
+		</div>
+    </div>
+
+
+</body>
+</html>
