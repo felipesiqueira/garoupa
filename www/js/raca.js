@@ -5,51 +5,62 @@ $(document).ready(function()
 	document.addEventListener('deviceready', function() {
 	db = window.sqlitePlugin.openDatabase({name: 'database.db', location: 'default'});	
 				
-		//FUNÇÃO LISTAR EVENTOS
-
+		//FAZENDA ATUAL
 		db.transaction(function (tx) 
 		{
-			var query = "SELECT * FROM t_raca ORDER BY raca ASC";
+			var query = "SELECT id_fazenda FROM t_fazenda_atual";
 
 			tx.executeSql(query, [], function (tx, resultSet) 
-			{ 
-				for(var x = 0; x < resultSet.rows.length; x++) 
-				{	
-					$('#lsRacas tr:last').after('<tr><td>'+resultSet.rows.item(x).raca+'</td><td><a href="editRacas.html?id_raca='+resultSet.rows.item(x).id_raca+'"><img src="img/edit.png" class="iconeTable"></a></td></tr>');
-				}
-			});
-		});			  
-		
-		var getUrlParameter = function getUrlParameter(sParam) 
-		{
-			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			sURLVariables = sPageURL.split('?'),
-			sParameterName,
-			i;
-
-			for (i = 0; i < sURLVariables.length; i++) {
-			sParameterName = sURLVariables[i].split('=');
-
-			if (sParameterName[0] === sParam) {
-			return sParameterName[1] === undefined ? true : sParameterName[1];
-			}
-			}
-		};
-		
-		var id_raca = getUrlParameter('id_raca');
-
-		db.transaction(function (tx) 
-		{
-			var query = "SELECT * FROM t_raca WHERE id_raca=?";
-
-			tx.executeSql(query, [id_raca], function (tx, resultSet) 
-			{ 
-				$("#id_raca").val(resultSet.rows.item(0).id_raca);				
-				$("#nomeED").val(resultSet.rows.item(0).raca);
-			});
+			{
+				var id_fazenda = resultSet.rows.item(0).id_fazenda;
 				
+				
+			//FUNÇÃO LISTAR RACAS
+			db.transaction(function (tx) 
+			{
+				var query = "SELECT * FROM t_raca WHERE id_fazenda=? ORDER BY raca ASC";
+
+				tx.executeSql(query, [id_fazenda], function (tx, resultSet) 
+				{ 
+					for(var x = 0; x < resultSet.rows.length; x++) 
+					{	
+						$('#lsRacas tr:last').after('<tr><td>'+resultSet.rows.item(x).raca+'</td><td><a href="editRacas.html?id_raca='+resultSet.rows.item(x).id_raca+'"><img src="img/edit.png" class="iconeTable"></a></td></tr>');
+					}
+				});
+			});			  
+			
+			var getUrlParameter = function getUrlParameter(sParam) 
+			{
+				var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('?'),
+				sParameterName,
+				i;
+
+				for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+				}
+			};
+			
+			var id_raca = getUrlParameter('id_raca');
+
+			db.transaction(function (tx) 
+			{
+				var query = "SELECT * FROM t_raca WHERE id_raca=?";
+
+				tx.executeSql(query, [id_raca], function (tx, resultSet) 
+				{ 
+					$("#id_raca").val(resultSet.rows.item(0).id_raca);				
+					$("#nomeED").val(resultSet.rows.item(0).raca);
+				});
+					
+			});
+		
+			});
 		});
-	
 	});
 
 	//FUNÇÃO CADASTRAR
@@ -61,14 +72,20 @@ $(document).ready(function()
 		{
 			db.transaction(function(tx, results) 
 			{
-				tx.executeSql("SELECT * FROM t_parametros", [], function (tx, resultSet) 
+				
+				tx.executeSql("SELECT * FROM t_fazenda_atual", [], function (tx, resultSet) 
 				{ 
-					var hash = resultSet.rows.item(0).hash;				
-					var user = resultSet.rows.item(0).usuario;
-					var sync = 0;
+					var id_fazenda = resultSet.rows.item(0).id_fazenda;
 					
-					tx.executeSql('CREATE TABLE IF NOT EXISTS t_raca (id_raca INTEGER PRIMARY KEY AUTOINCREMENT, raca text, hash text, user text, sync text)');
-					tx.executeSql('INSERT INTO t_raca VALUES (?,?,?,?,?)', [null, nome, hash, user, sync]);
+					tx.executeSql("SELECT * FROM t_parametros", [], function (tx, resultSet) 
+					{ 
+						var hash = resultSet.rows.item(0).hash;				
+						var user = resultSet.rows.item(0).usuario;
+						var sync = 0;
+						
+						tx.executeSql('CREATE TABLE IF NOT EXISTS t_raca (id_raca INTEGER PRIMARY KEY AUTOINCREMENT, raca text, hash text, user text, sync text, id_fazenda text)');
+						tx.executeSql('INSERT INTO t_raca VALUES (?,?,?,?,?,?)', [null, nome, hash, user, sync, id_fazenda]);
+					});
 				});
 				
 			}, function(error) {

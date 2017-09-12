@@ -10,7 +10,7 @@
 <body>
 	<div class="bar bar-header bar-dark">
 		<a class="button button-clear" href="listEventoLote.html">Voltar</a>
-		<h1 class="title">Cadastrar evento sanitário - Individual</h1>
+		<h1 class="title">Editar evento sanitário - Lote</h1>
 	</div>
     <div class="container-fluid" style="margin-top:80px;">
 		<div class="row">
@@ -18,7 +18,7 @@
 				<label class="item item-input item-stacked-label">
 					<span class="input-label">Evento</span>
 					<input type="hidden" id="id_ocorrencia_sanitariaED">
-					<select name="eventoED" id="eventoED">
+					<select name="eventoED" id="eventoED" disabled>
 						<option value="">Selecione</option>
 					</select>
 				</label>
@@ -29,17 +29,10 @@
 							<option value="">Selecione</option>
 						</select>
 				</label>
-				
-				<label class="item item-input item-stacked-label">
-					<span class="input-label">Resultado</span>
-						<select name="resultadoED" id="resultadoED">
-							<option value="">Selecione</option>
-						</select>
-				</label>
 			</div>
 		</div>
 		<div class="row" style="margin-top:30px;">
-			<div class="col-xs-12"><center><button id="editarEvento" class="btn btn-success">SALVAR</button></center></div>
+			<div class="col-xs-12"><center><button id="editarEvento" class="btn btn-success">EDITAR RESULTADOS</button></center></div>
 		</div>				
 
     </div>
@@ -49,5 +42,12 @@
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/eventosLote.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/select2.css">
+    <script type="text/javascript" src="js/select2.js"></script>
+	<script>
+	$(document).ready(function () {
+	$("select").select2();
+	});
+	</script>	
 </body>
 </html>

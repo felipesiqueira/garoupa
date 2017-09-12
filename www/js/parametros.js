@@ -32,8 +32,9 @@ $(document).ready(function()
 
 			tx.executeSql(query, [], function (tx, resultSet) 
 			{ 
-				$("#usuario").val(resultSet.rows.item(0).usuario);				
+				$("#usuario").val(resultSet.rows.item(0).usuario);			
 				$("#ip").val(resultSet.rows.item(0).ip);
+				$("#atualizacao").val(resultSet.rows.item(0).atualizacao);
 			});
 				
 		});
@@ -43,16 +44,22 @@ $(document).ready(function()
 	//FUNÇÃO CADASTRAR
 	$("#incluirParametro").click(function() 
 	{	
-		var usuario = $("#usuario").val();
-		var ip 		= $("#ip").val();
-		var hash    = Math.floor(Math.random() * 65536);
-
+		var usuario 	= $("#usuario").val();
+		var ip 			= $("#ip").val();
+		var atualizacao = $("#atualizacao").val();
+		var hash        = Math.floor(Math.random() * 65536);
+		
+		now  = new Date;
+		var mes = now.getMonth()+1;
+		var data = now.getDate()+"/"+mes+"/"+now.getFullYear();
+		var hora = now.getHours()+":"+now.getMinutes();
+		
 		if(usuario != '' && ip != '')
 		{
 			db.transaction(function(tx, results) {                                  
 			tx.executeSql('DROP TABLE IF EXISTS t_parametros');
-			tx.executeSql('CREATE TABLE IF NOT EXISTS t_parametros (usuario text, ip text, hash text)');
-			tx.executeSql('INSERT INTO t_parametros VALUES (?,?,?)', [usuario, ip, hash]);
+			tx.executeSql('CREATE TABLE IF NOT EXISTS t_parametros (usuario text, ip text, atualizacao text, hash text, data text, hora text)');
+			tx.executeSql('INSERT INTO t_parametros VALUES (?,?,?,?,?,?)', [usuario, ip, atualizacao,  hash, data, hora]);
 			
 			}, function(error) {
 			navigator.notification.alert(error.message, alertCallback,  'Notificação', 'OK');

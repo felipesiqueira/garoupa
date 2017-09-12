@@ -11,42 +11,28 @@
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/animais.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+    <script type="text/javascript" src="js/jquery.dataTables.js"></script>	
 </head>
 <body>
     <div class="bar bar-header bar-dark">
-        <a class="button button-clear" href="index.html">Voltar</a>
+        <a class="button button-clear" href="menu.html">Voltar</a>
         <h1 class="title">Listar animais</h1>
     </div>
     <div class="container-fluid" style="margin-top:80px;">
 		
 		<div class="row">
-			<div class="col-xs-6"></div>
-			<div class="col-xs-6"><button  onclick="location.href='cadAnimais.html'" class="btn btn-success">CADASTRAR ANIMAL</button></div>
+			<div class="col-sm-6 col-xs-12"></div>
+			<div class="col-sm-6 col-xs-12 mgb"><button  onclick="location.href='cadAnimais.html'" class="btn btn-success">CADASTRAR ANIMAL</button></div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
 				<table class="table" id="lsAnimais">
-					<thead>
-						<tr>
-							<th>Brinco</th>
-							<th>Raça</th>
-							<th>Matriz</th>
-							<th>Sexo</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
 
-					</tbody>
-				</table>
-				<ul class="pager">
-				  <li><a href="" id="ant">Anterior</a></li>
-				  <li><a href="" id="prox">Próximo</a></li>
-				</ul>			
+				</table>		
 			</div>
 		</div>
     </div>
-
 
 </body>
 </html>

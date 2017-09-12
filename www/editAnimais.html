@@ -11,6 +11,9 @@
 		<h1 class="title">Editar animais</h1>
 	</div>
     <div class="container-fluid" style="margin-top:80px;">
+		<div class="row" style="margin-top:30px;">
+			<div class="col-xs-12"><button id="listEventoIndividualAnimal" class="btn btn-success">EVENTOS DO ANIMAL</button></div>
+		</div>
 		<div class="row">
 			<div class="col-xs-12">
 				<label class="item item-input item-stacked-label">
@@ -84,6 +87,14 @@
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/animais.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/select2.css">
+    <script type="text/javascript" src="js/select2.js"></script>
+	<script>
+	$(document).ready(function () {
+	$("select").select2();
+	});
+	</script>
 </body>
 </body>
 </html>

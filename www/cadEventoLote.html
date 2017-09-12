@@ -28,17 +28,11 @@
 							<option value="">Selecione</option>
 						</select>
 				</label>
-				
-				<label class="item item-input item-stacked-label">
-					<span class="input-label">Resultado</span>
-						<select name="resultado" id="resultado">
-							<option value="">Selecione</option>
-						</select>
-				</label>
+
 			</div>
 		</div>
 		<div class="row" style="margin-top:30px;">
-			<div class="col-xs-12"><center><button id="incluirEvento" class="btn btn-success">SALVAR</button></center></div>
+			<div class="col-xs-12"><center><button id="incluirEvento" class="btn btn-success">CADASTRAR RESULTADOS</button></center></div>
 		</div>				
 
     </div>
@@ -48,5 +42,12 @@
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/eventosLote.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/select2.css">
+    <script type="text/javascript" src="js/select2.js"></script>
+	<script>
+	$(document).ready(function () {
+	$("select").select2();
+	});
+	</script>	
 </body>
 </html>

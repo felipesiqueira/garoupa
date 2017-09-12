@@ -6,30 +6,34 @@
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
 	<link rel="stylesheet" type="text/css" href="css/ionic.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
 	<script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/lotes.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
-    <script type="text/javascript" src="js/jquery.dataTables.js"></script>	
+    <script type="text/javascript" src="js/eventosLoteAnimal.js"></script>
+    <script type="text/javascript" src="js/jquery.dataTables.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/select2.css">
+    <script type="text/javascript" src="js/select2.js"></script>
 </head>
 <body>
     <div class="bar bar-header bar-dark">
-        <a class="button button-clear" href="configuracoes.html">Voltar</a>
-        <h1 class="title">Listar lotes</h1>
+        <a class="button button-clear" href="menu.html">Voltar</a>
+        <h1 class="title">Listar de animais por lote</h1>
     </div>
     <div class="container-fluid" style="margin-top:80px;">
 		
-		<div class="row">
-			<div class="col-sm-6 col-xs-12"></div>
-			<div class="col-sm-6 col-xs-12 mgb"><button onclick="location.href='cadLote.html'" class="btn btn-success">CADASTRAR LOTE</button></div>
-		</div>
+		<input type="hidden" id="lote">
+		<input type="hidden" id="idocorrencia">
+		
 		<div class="row">
 			<div class="col-xs-12">
-				<table class="table" id="lsLotes">
-		
+				<table class="table" id="lsEventos">
+
 				</table>
 			</div>
+		</div>
+		<div class="row" style="margin-top:30px;">
+			<div class="col-xs-12"><center><button id="incluir" class="btn btn-success">SALVAR</button></center></div>
 		</div>
     </div>
 </body>

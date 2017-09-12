@@ -7,6 +7,27 @@ $(document).ready(function()
 		//FAZENDA ATUAL
 		db.transaction(function (tx) 
 		{
+			
+			var getUrlParameter = function getUrlParameter(sParam) 
+			{
+				var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('?'),
+				sParameterName,
+				i;
+
+				for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+				}
+			};
+			
+			var id_ocorrencia = getUrlParameter('id_ocorrencia');			
+			var id_animal = getUrlParameter('id_animal');			
+			
+			
 			var query = "SELECT id_fazenda FROM t_fazenda_atual";
 
 			tx.executeSql(query, [], function (tx, resultSet) 
@@ -45,9 +66,9 @@ $(document).ready(function()
 				
 				db.transaction(function (tx) 
 				{
-					var query = "SELECT t_ocorrenciaxanimal.id_ocorrencia, t_eventos_sanitarios.evento_sanitario, t_animais.brinco FROM t_ocorrenciaxanimal INNER JOIN t_eventos_sanitarios ON t_eventos_sanitarios.id_evento_sanitario=t_ocorrenciaxanimal.id_evento_sanitario INNER JOIN t_animais on t_animais.id_animal=t_ocorrenciaxanimal.id_animal WHERE t_ocorrenciaxanimal.id_fazenda=?";
+					var query = "SELECT t_ocorrenciaxanimal.id_ocorrencia, t_eventos_sanitarios.evento_sanitario, t_animais.brinco FROM t_ocorrenciaxanimal INNER JOIN t_eventos_sanitarios ON t_eventos_sanitarios.id_evento_sanitario=t_ocorrenciaxanimal.id_evento_sanitario INNER JOIN t_animais on t_animais.id_animal=t_ocorrenciaxanimal.id_animal WHERE t_ocorrenciaxanimal.id_animal=? AND t_ocorrenciaxanimal.id_fazenda=?";
 
-					tx.executeSql(query, [id_fazenda], function (tx, resultSet) 
+					tx.executeSql(query, [id_animal, id_fazenda], function (tx, resultSet) 
 					{ 
 						var dataSet = []; 
 						for(var x = 0; x < resultSet.rows.length; x++) 
@@ -69,27 +90,6 @@ $(document).ready(function()
 					});
 						
 				});
-
-				
-
-			  
-				var getUrlParameter = function getUrlParameter(sParam) 
-				{
-					var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-					sURLVariables = sPageURL.split('?'),
-					sParameterName,
-					i;
-
-					for (i = 0; i < sURLVariables.length; i++) {
-					sParameterName = sURLVariables[i].split('=');
-
-					if (sParameterName[0] === sParam) {
-					return sParameterName[1] === undefined ? true : sParameterName[1];
-					}
-					}
-				};
-				
-				var id_ocorrencia = getUrlParameter('id_ocorrencia');
 
 				db.transaction(function (tx) 
 				{

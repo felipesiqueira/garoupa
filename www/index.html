@@ -10,56 +10,28 @@
 	<script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
 </head>
 <body>
-    <div class="container-fluid" style="margin-top:80px;">
+    <div class="container-fluid" style="margin-top:100px;">
 		<div class="row">
-			<div class="col-md-12"><center><img src="img/logo.png" id="logo"></center></div>
+			<div class="col-md-12"><center><img src="img/logo.png" id="logoInicio"></center></div>
 		</div>
 		<div class="row">
-			<div class="col-xs-6">
-				<div class="newButton" onclick="location.href='listAnimais.html'">
-					<img src="img/animal.png" class="img-responsive iconButton">
-					<div class="newButtonTxt">Cadastrar animais</div>
-				</div>			
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8">
+				<h3>Selecione a fazenda:</h3>
+				<select name="fazenda" id="fazenda">
+					<option value="">Selecione</option>
+					<option value="1">Agropecuaria Garoupa</option>
+					<option value="3">Fazenda Frei Paulo</option>
+				</select>			
+				<button id="login" class="btn btn-success">ACESSAR</button>
+
 			</div>
-			<div class="col-xs-6">
-				<div class="newButton" onclick="location.href='listEventoIndividual.html'">
-					<img src="img/seringa.png" class="img-responsive iconButton">
-					<div class="newButtonTxt">Evento sanitário<br>Individual</div>
-				</div>			
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-6">	
-				<div class="newButton" onclick="location.href='listEventoLote.html'">
-					<img src="img/lote.png" class="img-responsive iconButton">
-					<div class="newButtonTxt">Evento sanitário<br>Por Lote</div>
-				</div>			
-			</div>
-			<div class="col-xs-6">	
-				<div class="newButton" onclick="location.href='configuracoes.html'">
-					<img src="img/config.png" class="img-responsive iconButton">
-					<div class="newButtonTxt">Configurações</div>
-				</div>			
-			</div>
+			<div class="col-sm-2"></div>
 		</div>
 		
-		<div class="row">
-			<div class="col-xs-6">
-				<div class="newButtonHorizon" id="sincronizar">
-					<div class="newButtonHorizonImg"><img src="img/sinc.png" class="iconButtonHorizon"></div>
-					<div class="newButtonHorizonTxt">Sincronizar</div>
-				</div>		
-			</div>
-			<div class="col-xs-6">
-				<div class="newButtonHorizon" id="sair">
-					<div class="newButtonHorizonImg"><img src="img/logout.png" class="iconButtonHorizon"></div>
-					<div class="newButtonHorizonTxt">Sair</div>
-				</div>			
-			</div>
-		</div>		
 
     </div>
 

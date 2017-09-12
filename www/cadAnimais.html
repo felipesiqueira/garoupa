@@ -30,7 +30,7 @@
 					<span class="input-label">Raça</span>
 						<select name="raca" id="raca">
 							<option value="">Selecione</option>
-						</select>
+						</select>						
 				</label>
 
 				<label class="item item-input item-stacked-label">
@@ -78,9 +78,16 @@
     </div>
 	<link rel="stylesheet" type="text/css" href="css/ionic.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/select2.css">
 	<script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/animais.js"></script>
+    <script type="text/javascript" src="js/select2.js"></script>
+	<script>
+	$(document).ready(function () {
+	$("select").select2();
+	});
+	</script>
 </body>
 </html>
