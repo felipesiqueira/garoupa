@@ -64,108 +64,10 @@ $(document).ready(function()
 					checkOnline('http://'+ip+'/serverTablet/teste.php', function() {navigator.notification.alert('Erro ao conectar Webservice. Verifique conexão com o servidor!', alertCallback,  'Erro Conexão', 'OK');},	
 					
 					function()
-					{
-						window.plugins.spinnerDialog.show("Notificação","Sincronização em andamento", true);
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Raças", true);
-							racasTab();
-						}, 0001);
-						
-						window.setTimeout(function() {
-							racasMysql();
-						}, 2000);
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Estados", true);
-							estadosTab();
-						}, 3000);
-						
-						window.setTimeout(function() {
-							estadosMysql();
-						}, 4000);
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Eventos", true);
-							eventosTab();
-						}, 5000);	
-						
-						window.setTimeout(function() {
-							eventosMysql();
-						}, 6000);
-						
-						/*window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Resultados", true);
-							resultadosTab();
-						}, 7000);
-												
-						window.setTimeout(function() {
-							resultadosMysql();
-						}, 8000);*/
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Animais", true);
-							animaisTab();
-						}, 7000);
-
-						window.setTimeout(function() {
-							animaisMysql();
-						}, 9000);							
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Lotes", true);
-							lotesTab();
-						}, 11000);	
-
-						window.setTimeout(function() {
-							lotesMysql();
-						}, 13000);								
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Lotes de Animais", true);
-							animalLotesTab();
-						}, 15000);	
-						
-						window.setTimeout(function() {
-							animalLotesMysql();
-						}, 17000);						
-						
-
-						window.setTimeout(function() {
-							sanitarioLoteTab();
-						}, 19000);
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Eventos Sanitários por Lote", true);
-							sanitarioLoteMysql();
-						}, 21000);
-						
-						window.setTimeout(function() {
-							sanitarioIndividualTab();
-						}, 23000);
-						
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							window.plugins.spinnerDialog.show("Notificação","Sincronizando Eventos Sanitários Individuais", true);
-							sanitarioIndividualMysql();
-						}, 25000);							
-
-						window.setTimeout(function() {
-							window.plugins.spinnerDialog.hide();
-							navigator.notification.alert('Sincronização concluída!', alertCallback,  'Notificação', 'OK');
-							location.href='menu.html';
-						}, 27000);							
-
-					});					
-
+					{									
+						racasTab();										
+					});						
+					
 				});
 		}
 		else
@@ -186,27 +88,48 @@ $(document).ready(function()
 			
 			tx.executeSql("SELECT * FROM t_raca ORDER BY id_raca ASC", [], function (tx, resultSet1) 
 			{
-				for(var x = 0; x < resultSet1.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url1,
-						async: false,
-						data: 
+				contA = resultSet1.rows.length;
+				
+				if(contA==0)
+				{
+					racasMysql();
+				}
+				else
+				{
+					var cont=0;
+					for(var x = 0; x < resultSet1.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url1,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_raca':resultSet1.rows.item(x).id_raca,
+							'raca':resultSet1.rows.item(x).raca,	
+							'hash':resultSet1.rows.item(x).hash,
+							'user':resultSet1.rows.item(x).user,					
+							'sync':resultSet1.rows.item(x).sync,					
+							'id_fazenda':resultSet1.rows.item(x).id_fazenda,					
+							},
+							success: function(data) {},
+							error: function(erro){}
+						});
+						cont=cont+1;
+				
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_raca':resultSet1.rows.item(x).id_raca,
-						'raca':resultSet1.rows.item(x).raca,	
-						'hash':resultSet1.rows.item(x).hash,
-						'user':resultSet1.rows.item(x).user,					
-						'sync':resultSet1.rows.item(x).sync,					
-						'id_fazenda':resultSet1.rows.item(x).id_fazenda,					
-						},
-						success: function(data) {},
-						error: function(erro){}
-					});								
+							racasMysql(); 
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando raças", true);	
+						}						
+
+					}
 				}				
 			});						
 		});		
@@ -228,27 +151,51 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_raca 	= field.id_raca;
-					var raca 		= field.raca;
-					var sync    	= 1;
-					var id_fazenda 	= field.id_fazenda;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_raca (id_raca INTEGER PRIMARY KEY AUTOINCREMENT, raca text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_raca VALUES (?,?,?,?,?,?)', [id_raca, raca, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					sanitarioLoteTab();
+				}
+				else
+				{				
+					var cont=0;	
+					$.each(result, function(i, field)
+					{
+						var id_raca 	= field.id_raca;
+						var raca 		= field.raca;
+						var sync    	= 1;
+						var id_fazenda 	= field.id_fazenda;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_raca (id_raca INTEGER PRIMARY KEY AUTOINCREMENT, raca text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_raca VALUES (?,?,?,?,?,?)', [id_raca, raca, null, null, sync, id_fazenda]);
+							cont=cont+1;
+
+							if(cont>=contA)
+							{
+								estadosTab();
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando raças", true);	
+							}							
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}
 	
-	/////ESTADOS/////
+	//ESTADOS/////
 	function estadosTab()
 	{
 		var url2 = 'http://'+ip+"/serverTablet/estado_animal.php";
@@ -258,28 +205,48 @@ $(document).ready(function()
 
 			tx.executeSql("SELECT * FROM t_estado_animal ORDER BY id_estado_animal ASC", [], function (tx, resultSet4) 
 			{
-				for(var x = 0; x < resultSet4.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url2,
-						async: false,
-						data: 
+				contA = resultSet4.rows.length;
+				
+				if(contA==0)
+				{
+					estadosMysql();
+				}
+				else
+				{
+					var cont=0;
+					
+					for(var x = 0; x < resultSet4.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url2,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_estado_animal':resultSet4.rows.item(x).id_estado_animal,
+							'estado_animal':resultSet4.rows.item(x).estado_animal,	
+							'hash':resultSet4.rows.item(x).hash,
+							'user':resultSet4.rows.item(x).user,					
+							'sync':resultSet4.rows.item(x).sync,					
+							'id_fazenda':resultSet4.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});	
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_estado_animal':resultSet4.rows.item(x).id_estado_animal,
-						'estado_animal':resultSet4.rows.item(x).estado_animal,	
-						'hash':resultSet4.rows.item(x).hash,
-						'user':resultSet4.rows.item(x).user,					
-						'sync':resultSet4.rows.item(x).sync,					
-						'id_fazenda':resultSet4.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
-				}	
+							estadosMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando estados do animal", true);	
+						}					
+					}
+				}				
 			});		
 		});		
 	}	
@@ -300,27 +267,51 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_estado_animal = field.id_estado_animal;
-					var estado_animal    = field.estado_animal;
-					var id_fazenda       = field.id_fazenda;
-					var sync         	 = 1;
-												
-					db.transaction(function(tx) 
-					{
-					tx.executeSql('CREATE TABLE IF NOT EXISTS t_estado_animal (id_estado_animal INTEGER PRIMARY KEY AUTOINCREMENT, estado_animal text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_estado_animal VALUES (?,?,?,?,?,?)', [id_estado_animal, estado_animal, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					sanitarioLoteTab();
+				}
+				else
+				{				
+					var cont=0;				
+					$.each(result, function(i, field)
+					{
+						var id_estado_animal = field.id_estado_animal;
+						var estado_animal    = field.estado_animal;
+						var id_fazenda       = field.id_fazenda;
+						var sync         	 = 1;
+													
+						db.transaction(function(tx) 
+						{
+						tx.executeSql('CREATE TABLE IF NOT EXISTS t_estado_animal (id_estado_animal INTEGER PRIMARY KEY AUTOINCREMENT, estado_animal text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_estado_animal VALUES (?,?,?,?,?,?)', [id_estado_animal, estado_animal, null, null, sync, id_fazenda]);
+							
+						cont=cont+1;
+						if(cont>=contA)
+						{
+							eventosTab();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando estados do animal", true);	
+						}	
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});					
 		});			
 	}	
 	
-	/////EVENTOS SANITARIOS/////
+	//EVENTOS SANITARIOS/////
 	function eventosTab()
 	{
 		var url3 = 'http://'+ip+"/serverTablet/evento_sanitario.php";
@@ -330,28 +321,48 @@ $(document).ready(function()
 			
 			tx.executeSql("SELECT * FROM t_eventos_sanitarios ORDER BY id_evento_sanitario ASC", [], function (tx, resultSet2) 
 			{
-				for(var x = 0; x < resultSet2.rows.length; x++) 
-				{		
-						
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,
-						url: url3,
-						async: false,
-						data: 
+				contA = resultSet2.rows.length;
+				
+				if(contA==0)
+				{
+					eventosMysql();
+				}
+				else
+				{				
+					var cont=0;
+					
+					for(var x = 0; x < resultSet2.rows.length; x++) 
+					{		
+							
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,
+							url: url3,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_evento_sanitario':resultSet2.rows.item(x).id_evento_sanitario,
+							'evento_sanitario':resultSet2.rows.item(x).evento_sanitario,	
+							'hash':resultSet2.rows.item(x).hash,
+							'user':resultSet2.rows.item(x).user,					
+							'sync':resultSet2.rows.item(x).sync,					
+							'id_fazenda':resultSet2.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});	
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_evento_sanitario':resultSet2.rows.item(x).id_evento_sanitario,
-						'evento_sanitario':resultSet2.rows.item(x).evento_sanitario,	
-						'hash':resultSet2.rows.item(x).hash,
-						'user':resultSet2.rows.item(x).user,					
-						'sync':resultSet2.rows.item(x).sync,					
-						'id_fazenda':resultSet2.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							eventosMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos", true);	
+						}					
+					}
 				}
 				
 			});			
@@ -374,29 +385,50 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_evento_sanitario = field.id_evento_sanitario;
-					var evento_sanitario 	= field.evento_sanitario;
-					var id_fazenda 			= field.id_fazenda;
-					var sync   				= 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_eventos_sanitarios (id_evento_sanitario INTEGER PRIMARY KEY AUTOINCREMENT, evento_sanitario text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_eventos_sanitarios VALUES (?,?,?,?,?,?)', [id_evento_sanitario, evento_sanitario, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					resultadosTab();
+				}
+				else
+				{				
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_evento_sanitario = field.id_evento_sanitario;
+						var evento_sanitario 	= field.evento_sanitario;
+						var id_fazenda 			= field.id_fazenda;
+						var sync   				= 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_eventos_sanitarios (id_evento_sanitario INTEGER PRIMARY KEY AUTOINCREMENT, evento_sanitario text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_eventos_sanitarios VALUES (?,?,?,?,?,?)', [id_evento_sanitario, evento_sanitario, null, null, sync, id_fazenda]);
+							
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								resultadosTab(); 
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos", true);	
+							}	
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});					
 		});			
 	}	
 
-
-	
-	/////RESULTADOS/////
 	function resultadosTab()
 	{
 		var url4 = 'http://'+ip+"/serverTablet/resultados.php";
@@ -406,27 +438,47 @@ $(document).ready(function()
 
 			tx.executeSql("SELECT * FROM t_resultados ORDER BY id_resultado ASC", [], function (tx, resultSet3) 
 			{
-				for(var x = 0; x < resultSet3.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url4,
-						async: false,
-						data: 
+				contA = resultSet3.rows.length;
+	
+				if(contA==0)
+				{
+					resultadosMysql(); 
+				}
+				else
+				{				
+					var cont=0;
+					
+					for(var x = 0; x < resultSet3.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url4,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_resultado':resultSet3.rows.item(x).id_resultado,
+							'resultado':resultSet3.rows.item(x).resultado,	
+							'hash':resultSet3.rows.item(x).hash,
+							'user':resultSet3.rows.item(x).user,					
+							'sync':resultSet3.rows.item(x).sync,					
+							'id_fazenda':resultSet3.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});	
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_resultado':resultSet3.rows.item(x).id_resultado,
-						'resultado':resultSet3.rows.item(x).resultado,	
-						'hash':resultSet3.rows.item(x).hash,
-						'user':resultSet3.rows.item(x).user,					
-						'sync':resultSet3.rows.item(x).sync,					
-						'id_fazenda':resultSet3.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							resultadosMysql(); 
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando resultados 1", true);	
+						}					
+					}				
 				}				
 			});			
 		});		
@@ -448,30 +500,55 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
+				
 				$.each(result, function(i, field)
 				{
-					var id_resultado = field.id_resultado;
-					var resultado    = field.resultado;
-					var id_fazenda   = field.id_fazenda;
-					var sync         = 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_resultados (id_resultado INTEGER PRIMARY KEY AUTOINCREMENT, resultado text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_resultados VALUES (?,?,?,?,?,?)', [id_resultado, resultado, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				
+				if(contA==0)
+				{
+					animaisTab(); 
+				}
+				else
+				{
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_resultado = field.id_resultado;
+						var resultado    = field.resultado;
+						var id_fazenda   = field.id_fazenda;
+						var sync         = 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_resultados (id_resultado INTEGER PRIMARY KEY AUTOINCREMENT, resultado text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_resultados VALUES (?,?,?,?,?,?)', [id_resultado, resultado, null, null, sync, id_fazenda]);
+							
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								animaisTab();  
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando resultados 2", true);	
+							}
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}		
 	
-	/////ANIMAIS/////
 	function animaisTab()
 	{
-		//ANIMAIS
 		var url0 = 'http://'+ip+"/serverTablet/animais.php";
 		db.transaction(function (tx) 
 		{
@@ -479,45 +556,62 @@ $(document).ready(function()
 			
 			tx.executeSql("SELECT * FROM t_animais ORDER BY id_animal ASC", [], function (tx, resultSet0) 
 			{
-				for(var x = 0; x < resultSet0.rows.length; x++) 
-				{								
-					$.ajax(
-					{
-						type: 'POST',
-						dataType: 'text',
-						cache: false,
-						url: url0,
-						async: false,
-						data: 
-						{
-						'insert':true,
-						'id_animal':resultSet0.rows.item(x).id_animal,	
-						'brinco':resultSet0.rows.item(x).brinco,	
-						'matriz':resultSet0.rows.item(x).matriz,	
-						'id_raca':resultSet0.rows.item(x).id_raca,	
-						'sexo':resultSet0.rows.item(x).sexo,	
-						'id_animal_pai':resultSet0.rows.item(x).id_animal_pai,	
-						'id_animal_mae':resultSet0.rows.item(x).id_animal_mae,	
-						'ativo':resultSet0.rows.item(x).ativo,	
-						'id_estado':resultSet0.rows.item(x).id_estado,	
-						'hash':resultSet0.rows.item(x).hash,
-						'user':resultSet0.rows.item(x).user,					
-						'sync':resultSet0.rows.item(x).sync,								
-						'id_fazenda':resultSet0.rows.item(x).id_fazenda,								
-						},
-						success: function(data){},
-						error: function(erro){}
-					});		
+				contA = resultSet0.rows.length;
+				
+				if(contA==0)
+				{
+					animaisMysql();
 				}
-
-							
+				else
+				{				
+					var cont=0;
+					
+					for(var x = 0; x < resultSet0.rows.length; x++) 
+					{								
+						$.ajax(
+						{
+							type: 'POST',
+							dataType: 'text',
+							cache: false,
+							url: url0,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_animal':resultSet0.rows.item(x).id_animal,	
+							'brinco':resultSet0.rows.item(x).brinco,	
+							'matriz':resultSet0.rows.item(x).matriz,	
+							'id_raca':resultSet0.rows.item(x).id_raca,	
+							'sexo':resultSet0.rows.item(x).sexo,	
+							'id_animal_pai':resultSet0.rows.item(x).id_animal_pai,	
+							'id_animal_mae':resultSet0.rows.item(x).id_animal_mae,	
+							'ativo':resultSet0.rows.item(x).ativo,	
+							'id_estado':resultSet0.rows.item(x).id_estado,	
+							'hash':resultSet0.rows.item(x).hash,
+							'user':resultSet0.rows.item(x).user,					
+							'sync':resultSet0.rows.item(x).sync,								
+							'id_fazenda':resultSet0.rows.item(x).id_fazenda,								
+							},
+							success: function(data){},
+							error: function(erro){}
+						});		
+						cont=cont+1;
+						if(cont>=contA)
+						{
+							animaisMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando animais", true);	
+						}	
+					}
+				}				
 			});						
 		});		
 	}	
 	
 	function animaisMysql()
 	{
-		//ANIMAIS
 		var url0 = 'http://'+ip+"/serverTablet/animais.php";
 		db.transaction(function (tx) 
 		{
@@ -532,34 +626,58 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_animal 		= field.id_animal;	
-					var brinco 			= field.brinco;	
-					var matriz 			= field.matriz;	
-					var id_raca 		= field.id_raca;	
-					var sexo 			= field.sexo;	
-					var id_animal_pai 	= field.id_animal_pai;	
-					var id_animal_mae 	= field.id_animal_mae;	
-					var ativo 			= field.ativo;	
-					var id_estado 		= field.id_estado;	
-					var id_fazenda 		= field.id_fazenda;	
-					var sync    		= 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_animais (id_animal INTEGER PRIMARY KEY AUTOINCREMENT, brinco text, matriz text, sexo text, id_raca INTEGER, id_estado INTEGER, id_animal_pai INTEGER, id_animal_mae INTEGER, ativo text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_animais VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', [id_animal, brinco, matriz, sexo, id_raca, id_estado, id_animal_pai, id_animal_mae, ativo, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					lotesTab();
+				}
+				else
+				{				
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_animal 		= field.id_animal;	
+						var brinco 			= field.brinco;	
+						var matriz 			= field.matriz;	
+						var id_raca 		= field.id_raca;	
+						var sexo 			= field.sexo;	
+						var id_animal_pai 	= field.id_animal_pai;	
+						var id_animal_mae 	= field.id_animal_mae;	
+						var ativo 			= field.ativo;	
+						var id_estado 		= field.id_estado;	
+						var id_fazenda 		= field.id_fazenda;	
+						var sync    		= 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_animais (id_animal INTEGER PRIMARY KEY AUTOINCREMENT, brinco text, matriz text, sexo text, id_raca INTEGER, id_estado INTEGER, id_animal_pai INTEGER, id_animal_mae INTEGER, ativo text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_animais VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', [id_animal, brinco, matriz, sexo, id_raca, id_estado, id_animal_pai, id_animal_mae, ativo, null, null, sync, id_fazenda]);
+							
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								lotesTab();
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando lotes", true);	
+							}					
+						
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});					
 		});			
 	}
 	
-	/////LOTES/////
 	function lotesTab()
 	{
 		var url5 = 'http://'+ip+"/serverTablet/lotes.php";
@@ -569,27 +687,47 @@ $(document).ready(function()
 
 			tx.executeSql("SELECT * FROM t_lotes ORDER BY id_lote ASC", [], function (tx, resultSet5) 
 			{
-				for(var x = 0; x < resultSet5.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url5,
-						async: false,
-						data: 
+				contA = resultSet5.rows.length;
+				
+				if(contA==0)
+				{
+					lotesMysql();
+				}
+				else
+				{				
+					var cont=0;
+						
+					for(var x = 0; x < resultSet5.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url5,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_lote':resultSet5.rows.item(x).id_lote,
+							'lote':resultSet5.rows.item(x).lote,	
+							'hash':resultSet5.rows.item(x).hash,
+							'user':resultSet5.rows.item(x).user,					
+							'sync':resultSet5.rows.item(x).sync,					
+							'id_fazenda':resultSet5.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});	
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_lote':resultSet5.rows.item(x).id_lote,
-						'lote':resultSet5.rows.item(x).lote,	
-						'hash':resultSet5.rows.item(x).hash,
-						'user':resultSet5.rows.item(x).user,					
-						'sync':resultSet5.rows.item(x).sync,					
-						'id_fazenda':resultSet5.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							lotesMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando lotes", true);	
+						}					
+					}				
 				}				
 			});			
 		});		
@@ -611,27 +749,52 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_lote     = field.id_lote;
-					var lote    	= field.lote;
-					var id_fazenda  = field.id_fazenda;
-					var sync    = 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_lotes (id_lote INTEGER PRIMARY KEY AUTOINCREMENT, lote text, data date default CURRENT_DATE, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_lotes VALUES (?,?,?,?,?,?,?)', [id_lote, lote, null, null, null, sync, id_fazenda]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					animalLotesTab();
+				}
+				else
+				{				
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_lote     = field.id_lote;
+						var lote    	= field.lote;
+						var id_fazenda  = field.id_fazenda;
+						var sync    = 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_lotes (id_lote INTEGER PRIMARY KEY AUTOINCREMENT, lote text, data date default CURRENT_DATE, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_lotes VALUES (?,?,?,?,?,?,?)', [id_lote, lote, null, null, null, sync, id_fazenda]);
+						
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								animalLotesTab();
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando lotes", true);	
+							}
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}		
 
-	/////LOTES ANIMAIS/////
+
 	function animalLotesTab()
 	{
 		var url6 = 'http://'+ip+"/serverTablet/lotesAnimais.php";
@@ -641,25 +804,45 @@ $(document).ready(function()
 
 			tx.executeSql("SELECT * FROM t_lotesxanimal ORDER BY id_animal ASC", [], function (tx, resultSet6) 
 			{
-				for(var x = 0; x < resultSet6.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url6,
-						data: 
+				contA = resultSet6.rows.length;
+				
+				if(contA==0)
+				{
+					animalLotesMysql();
+				}
+				else
+				{				
+					var cont=0;
+									
+					for(var x = 0; x < resultSet6.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url6,
+							data: 
+							{
+							'insert':true,
+							'id_lote':resultSet6.rows.item(x).id_lote,
+							'id_animal':resultSet6.rows.item(x).id_animal,	
+							'hash':resultSet6.rows.item(x).hash,
+							'user':resultSet6.rows.item(x).user,					
+							'sync':resultSet6.rows.item(x).sync,									
+							},
+							success: function(data){},
+							error: function(erro){}
+						});		
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_lote':resultSet6.rows.item(x).id_lote,
-						'id_animal':resultSet6.rows.item(x).id_animal,	
-						'hash':resultSet6.rows.item(x).hash,
-						'user':resultSet6.rows.item(x).user,					
-						'sync':resultSet6.rows.item(x).sync,									
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							animalLotesMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando lotes de animais", true);	
+						}					
+					}				
 				}				
 			});			
 		});		
@@ -681,26 +864,49 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_lote    = field.id_lote;
-					var id_animal  = field.id_animal;
-					var sync       = 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_lotesxanimal (id_lote INTEGER, id_animal INTEGER, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_lotesxanimal VALUES (?,?,?,?,?,?)', [id_lote, id_animal, null, null, sync, null]);
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					sanitarioIndividualTab();
+				}
+				else
+				{				
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_lote    = field.id_lote;
+						var id_animal  = field.id_animal;
+						var sync       = 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_lotesxanimal (id_lote INTEGER, id_animal INTEGER, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_lotesxanimal VALUES (?,?,?,?,?,?)', [id_lote, id_animal, null, null, sync, null]);
+							
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								sanitarioIndividualTab();
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando lotes de animais", true);	
+							}					
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}	
 	
-	/////SANITARIO INDIVIDUAL/////
 	function sanitarioIndividualTab()
 	{
 		var url7 = 'http://'+ip+"/serverTablet/sanitarioIndividual.php";
@@ -710,31 +916,51 @@ $(document).ready(function()
 			
 			tx.executeSql("SELECT * FROM t_ocorrenciaxanimal ORDER BY id_ocorrencia ASC", [], function (tx, resultSet7) 
 			{
-				for(var x = 0; x < resultSet7.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url7,
-						async: false,
-						data: 
+				contA = resultSet7.rows.length;
+				
+				if(contA==0)
+				{
+					sanitarioIndividualMysql();
+				}
+				else
+				{				
+					var cont=0;
+						
+					for(var x = 0; x < resultSet7.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url7,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_ocorrencia':resultSet7.rows.item(x).id_ocorrencia,
+							'id_ocorrencia_lote':resultSet7.rows.item(x).id_ocorrencia_lote,
+							'id_evento_sanitario':resultSet7.rows.item(x).id_evento_sanitario,	
+							'id_animal':resultSet7.rows.item(x).id_animal,	
+							'id_resultado':resultSet7.rows.item(x).id_resultado,	
+							'obs':resultSet7.rows.item(x).obs,							
+							'hash':resultSet7.rows.item(x).hash,
+							'user':resultSet7.rows.item(x).user,					
+							'sync':resultSet7.rows.item(x).sync,					
+							'id_fazenda':resultSet7.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});		
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_ocorrencia':resultSet7.rows.item(x).id_ocorrencia,
-						'id_ocorrencia_lote':resultSet7.rows.item(x).id_ocorrencia_lote,
-						'id_evento_sanitario':resultSet7.rows.item(x).id_evento_sanitario,	
-						'id_animal':resultSet7.rows.item(x).id_animal,	
-						'id_resultado':resultSet7.rows.item(x).id_resultado,	
-						'obs':resultSet7.rows.item(x).obs,							
-						'hash':resultSet7.rows.item(x).hash,
-						'user':resultSet7.rows.item(x).user,					
-						'sync':resultSet7.rows.item(x).sync,					
-						'id_fazenda':resultSet7.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							sanitarioIndividualMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos individuais", true);	
+						}						
+					}				
 				}				
 			});			
 		});		
@@ -756,33 +982,55 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
 				{
-					var id_ocorrencia 		= field.id_ocorrencia;
-					var id_ocorrencia_lote  = field.id_ocorrencia_lote;
-					var id_evento_sanitario = field.id_evento_sanitario;
-					var id_animal    		= field.id_animal;
-					var id_resultado    	= field.id_resultado;
-					var obs    				= field.obs;
-					var id_fazenda    		= field.id_fazenda;
-					var sync    			= 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_ocorrenciaxanimal (id_ocorrencia INTEGER PRIMARY KEY AUTOINCREMENT, id_ocorrencia_lote INTEGER, id_evento_sanitario  INTEGER, id_animal INTEGER, id_resultado INTEGER, obs text, data text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_ocorrenciaxanimal VALUES (?,?,?,?,?,?,?,?,?,?,?)', [id_ocorrencia, id_ocorrencia_lote, id_evento_sanitario, id_animal, id_resultado, obs, null, null, null, sync, id_fazenda]);		
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					sanitarioLoteTab();
+				}
+				else
+				{					
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{
+						var id_ocorrencia 		= field.id_ocorrencia;
+						var id_ocorrencia_lote  = field.id_ocorrencia_lote;
+						var id_evento_sanitario = field.id_evento_sanitario;
+						var id_animal    		= field.id_animal;
+						var id_resultado    	= field.id_resultado;
+						var obs    				= field.obs;
+						var id_fazenda    		= field.id_fazenda;
+						var sync    			= 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_ocorrenciaxanimal (id_ocorrencia INTEGER PRIMARY KEY AUTOINCREMENT, id_ocorrencia_lote INTEGER, id_evento_sanitario  INTEGER, id_animal INTEGER, id_resultado INTEGER, obs text, data text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_ocorrenciaxanimal VALUES (?,?,?,?,?,?,?,?,?,?,?)', [id_ocorrencia, id_ocorrencia_lote, id_evento_sanitario, id_animal, id_resultado, obs, null, null, null, sync, id_fazenda]);		
+						
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								sanitarioLoteTab();
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos individuais", true);	
+							}	
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}	
 	
-	
-	
-	/////SANITARIO POR LOTE/////
 	function sanitarioLoteTab()
 	{
 		var url8 = 'http://'+ip+"/serverTablet/sanitarioLote.php";
@@ -792,30 +1040,50 @@ $(document).ready(function()
 
 			tx.executeSql("SELECT * FROM t_ocorrenciaxlote ORDER BY id_ocorrencia_sanitaria ASC", [], function (tx, resultSet8) 
 			{
-				for(var x = 0; x < resultSet8.rows.length; x++) 
-				{			
-					$.ajax({
-						type: 'POST',
-						dataType: 'text',
-						cache: false,	
-						url: url8,
-						async: false,
-						data: 
+				contA = resultSet8.rows.length;
+				
+				if(contA==0)
+				{
+					sanitarioLoteMysql();
+				}
+				else
+				{				
+					var cont=0;
+					
+					for(var x = 0; x < resultSet8.rows.length; x++) 
+					{			
+						$.ajax({
+							type: 'POST',
+							dataType: 'text',
+							cache: false,	
+							url: url8,
+							async: false,
+							data: 
+							{
+							'insert':true,
+							'id_ocorrencia_sanitaria':resultSet8.rows.item(x).id_ocorrencia_sanitaria,
+							'id_evento_sanitario':resultSet8.rows.item(x).id_evento_sanitario,	
+							'id_lote':resultSet8.rows.item(x).id_lote,	
+							'id_resultado':resultSet8.rows.item(x).id_resultado,	
+							'obs':resultSet8.rows.item(x).obs,	
+							'hash':resultSet8.rows.item(x).hash,
+							'user':resultSet8.rows.item(x).user,					
+							'sync':resultSet8.rows.item(x).sync,					
+							'id_fazenda':resultSet8.rows.item(x).id_fazenda,					
+							},
+							success: function(data){},
+							error: function(erro){}
+						});
+						cont=cont+1;
+						if(cont>=contA)
 						{
-						'insert':true,
-						'id_ocorrencia_sanitaria':resultSet8.rows.item(x).id_ocorrencia_sanitaria,
-						'id_evento_sanitario':resultSet8.rows.item(x).id_evento_sanitario,	
-						'id_lote':resultSet8.rows.item(x).id_lote,	
-						'id_resultado':resultSet8.rows.item(x).id_resultado,	
-						'obs':resultSet8.rows.item(x).obs,	
-						'hash':resultSet8.rows.item(x).hash,
-						'user':resultSet8.rows.item(x).user,					
-						'sync':resultSet8.rows.item(x).sync,					
-						'id_fazenda':resultSet8.rows.item(x).id_fazenda,					
-						},
-						success: function(data){},
-						error: function(erro){}
-					});								
+							sanitarioLoteMysql();
+						}
+						else
+						{
+							window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos por lote", true);	
+						}					
+					}				
 				}				
 			});			
 		});		
@@ -837,25 +1105,53 @@ $(document).ready(function()
 
 				});
 				
+				var contA=0;
 				$.each(result, function(i, field)
-				{	
-					var id_ocorrencia_sanitaria	= field.id_ocorrencia_sanitaria;
-					var id_evento_sanitario    	= field.id_evento_sanitario;
-					var id_lote    				= field.id_lote;
-					var id_resultado    		= field.id_resultado;
-					var data    		        = field.data;
-					var id_fazenda    		    = field.id_fazenda;
-					var sync    				= 1;
-												
-					db.transaction(function(tx) 
-					{
-						tx.executeSql('CREATE TABLE IF NOT EXISTS t_ocorrenciaxlote (id_ocorrencia_sanitaria INTEGER PRIMARY KEY AUTOINCREMENT, id_evento_sanitario INTEGER, id_lote INTEGER, id_resultado INTEGER, data text, hash text, user text, sync text, id_fazenda text)');
-						tx.executeSql('INSERT INTO t_ocorrenciaxlote VALUES (?,?,?,?,?,?,?,?,?)', [id_ocorrencia_sanitaria, id_evento_sanitario, id_lote, id_resultado, data, null, null, sync, id_fazenda]);		
-					}, function(error) {
-					alert('Transaction ERROR: ' + error.message);
-					}, function() {});
-
+				{
+					contA=contA+1;
 				});
+				if(contA==0)
+				{
+					navigator.notification.alert('Carga concluída com sucesso!', alertCallback,  'Notificação', 'OK');
+					window.plugins.spinnerDialog.hide();
+					location.href='menu.html';
+				}
+				else
+				{				
+					var cont=0;	
+					
+					$.each(result, function(i, field)
+					{	
+						var id_ocorrencia_sanitaria	= field.id_ocorrencia_sanitaria;
+						var id_evento_sanitario    	= field.id_evento_sanitario;
+						var id_lote    				= field.id_lote;
+						var id_resultado    		= field.id_resultado;
+						var data    		        = field.data;
+						var id_fazenda    		    = field.id_fazenda;
+						var sync    				= 1;
+													
+						db.transaction(function(tx) 
+						{
+							tx.executeSql('CREATE TABLE IF NOT EXISTS t_ocorrenciaxlote (id_ocorrencia_sanitaria INTEGER PRIMARY KEY AUTOINCREMENT, id_evento_sanitario INTEGER, id_lote INTEGER, id_resultado INTEGER, data text, hash text, user text, sync text, id_fazenda text)');
+							tx.executeSql('INSERT INTO t_ocorrenciaxlote VALUES (?,?,?,?,?,?,?,?,?)', [id_ocorrencia_sanitaria, id_evento_sanitario, id_lote, id_resultado, data, null, null, sync, id_fazenda]);		
+							cont=cont+1;
+							if(cont>=contA)
+							{
+								navigator.notification.alert('Carga concluída com sucesso!', alertCallback,  'Notificação', 'OK');
+								window.plugins.spinnerDialog.hide();
+								location.href='menu.html';
+							}
+							else
+							{
+								window.plugins.spinnerDialog.show("Sincronização em andamento", "Sincronizando eventos por lote", true);	
+							}		
+							
+						}, function(error) {
+						alert('Transaction ERROR: ' + error.message);
+						}, function() {});
+
+					});
+				}
 			});				
 		});			
 	}	

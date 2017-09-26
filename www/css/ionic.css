@@ -789,7 +789,7 @@ width: 100%;
 text-align: center;
 float: left;
 font-size: 18px;
-font-family: Arial;
+font-family: 'Roboto', sans-serif;
 text-decoration: none;
 display: inline-block;
 font-weight: bold;
@@ -799,7 +799,7 @@ line-height: 20px;
 .newButtonHorizonTxt {
 font-size: 18px;
 text-align: center;
-font-family: Arial;
+font-family: 'Roboto', sans-serif;
 text-decoration: none;
 display: inline-block;
 font-weight: bold;
@@ -821,7 +821,7 @@ background-image: -ms-linear-gradient(top, #f4f5f5, #dfdddd);
 background-image: -o-linear-gradient(top, #f4f5f5, #dfdddd);
 background-image: linear-gradient(to bottom, #f4f5f5, #dfdddd);
 filter: progid: DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#f4f5f5, endColorstr=#dfdddd);
-margin-top:30px;
+margin-top:15px;
 }
 #logo {
 width: 220px;
@@ -846,8 +846,8 @@ margin-top:50px
 }
 
 .iconButton {
-width: 90px;
-height: 90px;
+width: 80px;
+height: 80px;
 margin: 0 auto;
 margin-top: 20px;
 margin-bottom: 10px;
@@ -906,3 +906,10 @@ height:400px;
 display:none;
 overflow: auto	
 }
+
+.iconVoltar {
+width: 20px;
+height: 20px;
+margin: 0px 0px 4px 0px;
+}
+
